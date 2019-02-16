@@ -3,19 +3,15 @@
     <head>
         <meta charset="utf-8">
         <title>popup</title>
-        <style media="screen">
-            .popup-btn {
-                display: inline-block;
-                padding: 5px 10px;
-                cursor: pointer;
-                border: 1px solid #000;
-            }
-        </style>
+        <link rel="stylesheet" href="../css/popup.css">
+        <script scr="../js/jquery.js"></script>
     </head>
     <body>
-        <input id="id-gid" type="text" value="212337" placeholder="请输入 gid (商品编号)">
-        <input id="id-atid" type="text" value="193763" placeholder="请输入 atid (活动编号)">
-        <input id="id-deadline" type="text" value="2019-02-16 18:00:00" placeholder="抢购时间如: 2019-02-15 18:00:00">
+        <div class="div-goods-container"></div>
+        <span>点击图片自动填充</span>
+        <input id="id-gid" type="text" value="" placeholder="请输入 gid (商品编号)">
+        <input id="id-atid" type="text" value="" placeholder="请输入 atid (活动编号)">
+        <input id="id-deadline" type="text" value="" placeholder="抢购时间如: 2019-02-15 18:00:00">
         <span class="popup-btn" data-value="start">开启</span>
     </body>
     <script src="../js/popup.js"></script>

@@ -10,7 +10,7 @@
     "content_scripts": [
         {
             "matches": ["*://cat.epet.com/*"],
-            "js": ["js/user.js"]
+            "js": ["js/jquery.js", "js/user.js"]
         }
     ],
     "web_accessible_resources" : [
