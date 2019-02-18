@@ -9,9 +9,6 @@
     点击开始或者暂停后，触发这个事件
 
 
-
-
-
 1 首先在 body 中加入一个 crxDiv 用作开始、停止的开关
 2 打开 popup 时，判断当前是否已经开启，开关信息放在 body.dataset.state 中，初始化 body.dataset.state 为 end
     popup 无法获取 body
@@ -21,18 +18,15 @@
     返回状态给 popup
     popup 收到消息后 改变按钮状态
 
-
-
-
 自动获取商品信息
-
 1 打开插件时获取
 2 打开插件时，向 user 发消息，获取 dom 信息 getGoodsInfo
     异步行不通
     改为同步
 
 获取前面两个商品的信息
-
 点击之后填充
-
 时间填充
+
+
+popup 里增加各种设置参数

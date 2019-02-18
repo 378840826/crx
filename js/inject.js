@@ -53,7 +53,7 @@ var cart_ctl = function (tp, options) {
     $.get(reurl("share/ajax.html"), opts, function (res) {
         console.log('res:', res);
         if (res.includes('已抢完')) {
-            console.log('商品已抢完，停止抢购');
+            console.log('%c 商品已抢完，停止抢购~','color:#666');
             window.clearInterval(berserkTimer)
         } else if (res.includes('抢购上限')) {
             console.log('%c 抢到了，15分钟内去付款！','background:#ccc;color:#f00');
