@@ -33,3 +33,8 @@
 .goods-number > span {
     flex: 1;
 }
+
+label {
+    display: block;
+    margin: 10px 0;
+}

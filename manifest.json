@@ -1,10 +1,10 @@
 {
     "manifest_version": 2,
     "name": "e宠抢购",
-    "version": "2.0",
-    "description": "e宠整点抢购助手",
+    "version": "3.0",
+    "description": "抢购助手",
     "browser_action": {
-        "default_title": "e宠抢购插件2.1",
+        "default_title": "",
         "default_popup": "html/popup.html"
     },
     "content_scripts": [
