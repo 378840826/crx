@@ -1,5 +1,5 @@
 // 发送消息给 user 的方法
-let sendMessageToUser = (message, callback) => {
+const sendMessageToUser = (message, callback) => {
     chrome.tabs.query({
         active: true,
         currentWindow: true
@@ -13,25 +13,25 @@ let sendMessageToUser = (message, callback) => {
 }
 
 // 获取即将抢购的商品信息(向 user 发消息获取)
-let getGoodsInfo = () => {
+const getGoodsInfo = () => {
     sendMessageToUser({
         state: 'getGoodsInfo',
     }, function(response) {
         console.log('打开popup时 请求 getGoodsInfo 时收到的消息', response);
         // 得到商品信息后，放到页面，提供选择
-        var container = document.querySelector('.div-goods-container')
-        var html = createGoods(response)
+        let container = document.querySelector('.div-goods-container')
+        let html = createGoods(response)
         container.innerHTML = html
     })
 }
 
 // 创建商品 html
-let createGoods = function(goodsInfoArr) {
+const createGoods = function(goodsInfoArr) {
     if (goodsInfoArr === 'error') {
         console.log('创建商品错误');
     }
     let html = ''
-    for (var i = 0; i < goodsInfoArr.length; i++) {
+    for (let i = 0; i < goodsInfoArr.length; i++) {
         let goodsInfo = goodsInfoArr[i]
         html += `
             <span class="span-goods">
@@ -55,16 +55,34 @@ let createGoods = function(goodsInfoArr) {
     return html
 }
 
+// 在 scopeElement 上删除所有名为 className 的 classs
+const removeClassAll = (className, scopeElement) => {
+    var selector = '.' + className
+    if (scopeElement) {
+        var elements = scopeElement.querySelectorAll(selector)
+    } else {
+        var elements = document.querySelectorAll(selector)
+    }
+    for (var i = 0; i < elements.length; i++) {
+        var e = elements[i]
+        e.classList.remove(className)
+    }
+}
+
 // 点击开始抢购
-let bindClickStart = () => {
+const bindClickStart = () => {
     let popupBtn = document.querySelector('.popup-btn')
     popupBtn.addEventListener('click', function() {
         let gid = document.querySelector('#id-gid').value
         let atid = document.querySelector('#id-atid').value
         let deadline = document.querySelector('#id-deadline').value
         let title = document.querySelector('#id-title').innerText
-        let addTime = document.querySelector('#id-addTime').value
+        let frequency = document.querySelector('#id-frequency').value
         let speedinessTime = document.querySelector('#id-speedinessTime').value
+        if (gid === '' || atid === '' || deadline === '') {
+            document.querySelector('.p-error').innerText = '开启前先点击图片选择商品'
+            return
+        }
         // 发消息给 uesr
         sendMessageToUser({
             state: 'start',
@@ -72,7 +90,7 @@ let bindClickStart = () => {
             atid: Number(atid),
             deadline: deadline,
             title: title,
-            addTime: addTime,
+            frequency: frequency,
             speedinessTime: speedinessTime,
         }, function(response) {
             console.log("来自 content user 的回复：" + response)
@@ -82,16 +100,20 @@ let bindClickStart = () => {
 }
 
 // 点击图片填充 input
-let bindClickGoodsImg = () => {
+const bindClickGoodsImg = () => {
     // 商品点击自动填充
-    var container = document.querySelector('.div-goods-container')
+    let container = document.querySelector('.div-goods-container')
     container.addEventListener('click', function(event) {
-        var target = event.target
-        var goods = target.closest('.span-goods')
-        var gid = goods.querySelector('.goods-gid').innerText
-        var atid = goods.querySelector('.goods-atid').innerText
-        var deadline = goods.querySelector('.goods-deadline').innerText
-        var title = goods.querySelector('.goods-title').innerText
+        let target = event.target
+        let goodsSpan = target.closest('.span-goods')
+        let scopeElement = document.querySelector('.div-goods-container')
+        removeClassAll('active', scopeElement)
+        goodsSpan.classList.add('active')
+        let goods = target.closest('.span-goods')
+        let gid = goods.querySelector('.goods-gid').innerText
+        let atid = goods.querySelector('.goods-atid').innerText
+        let deadline = goods.querySelector('.goods-deadline').innerText
+        let title = goods.querySelector('.goods-title').innerText
         document.querySelector('#id-gid').value = gid
         document.querySelector('#id-atid').value = atid
         document.querySelector('#id-deadline').value = deadline
@@ -99,12 +121,12 @@ let bindClickGoodsImg = () => {
     })
 }
 
-let bindEvents = () => {
+const bindEvents = () => {
     bindClickStart()
     bindClickGoodsImg()
 }
 
-let __main = () => {
+const __main = () => {
     // 获取商品信息
     getGoodsInfo()
     // 绑定事件

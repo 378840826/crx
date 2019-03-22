@@ -20,6 +20,10 @@
     cursor: pointer;
 }
 
+.span-goods.active {
+    box-shadow: 0 0 5px 3px rgba(255, 0, 0, 0.2);
+}
+
 .goods-img {
     width: 200px;
     height: 200px;
@@ -37,4 +41,14 @@
 label {
     display: block;
     margin: 10px 0;
+}
+
+#id-title {
+    color: #f00;
+    font-size: 14px;
+}
+
+.p-error {
+    display: inline-block;
+    color: #f00;
 }

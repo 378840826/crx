@@ -1,20 +1,12 @@
-// // 参数
-// let options = {
-//     // 到加速时间后，循环添加购物车的时间间隔 ms
-//     addTime: 10,
-//     // 加速时间 s, 离抢购时间多少秒时开始加速
-//     speedinessTime: 3,
-// }
-
 // 向页面插入元素用于响应事件
-let appendElenemtToBody = () => {
+const appendElenemtToBody = () => {
     let crxDiv = document.createElement('div')
     crxDiv.id = 'id-crx-div'
     document.body.appendChild(crxDiv)
 }
 
 // 获取服务器时间
-let getServiceTime = function () {
+const getServiceTime = function () {
     // 避免缓存在 url 后面添加一个随机字符串
     let randomCode = Math.random()
     let url = `/share/ajax.html?randomCode=${randomCode}`
@@ -28,7 +20,7 @@ let getServiceTime = function () {
 }
 
 // 加购物车（被循环调用）
-let addGoodsTocart = function (goodsInfo, url) {
+const addGoodsTocart = function (goodsInfo, url) {
     cart_exists = true
     let opts = {
         gid: goodsInfo.gid,
@@ -63,16 +55,17 @@ let addGoodsTocart = function (goodsInfo, url) {
 }
 
 // 循环加入购物车
-let addToCart = function (goodsInfo, options) {
+const addToCart = function (goodsInfo, options) {
     console.log('开始加速，循环抢购')
     // url 放这里是避免在循环执行的 addGoodsTocart 函数中做不必要的重复执行 reurl
     var url = reurl("share/ajax.html")
     berserkTimer =  setInterval(function () {
         addGoodsTocart(goodsInfo, url)
-    }, options.addTime)
+    }, options.addCartLoopTimeMs)
 }
 
-let monitor = (goodsInfo, options) => {
+const monitor = (goodsInfo, options) => {
+    console.log('options', options);
     console.log(`%c准备抢购：${goodsInfo.title}`, 'color:#f00;font-size:20px;', `\n抢购开始时间为${goodsInfo.deadline}`);
     // 获取点击开启时的服务器时间和抢购时间
     let nowServiceTime = getServiceTime()
@@ -105,7 +98,7 @@ let monitor = (goodsInfo, options) => {
 }
 
 // 点击开始
-let bindClickStart = () => {
+const bindClickStart = () => {
     let crxDiv = document.querySelector('#id-crx-div')
     crxDiv.addEventListener('click', function() {
         let bodyDataset = document.body.dataset
@@ -120,17 +113,17 @@ let bindClickStart = () => {
             title: bodyDataset.title,
         }
         let options = {
-            // 到加速时间后，循环添加购物车的时间间隔 ms
-            addTime: Number(bodyDataset.addTime),
+            // 到加速时间后，每秒发送加够请求的次数
+            frequency: Number(bodyDataset.frequency),
             // 加速时间 s, 离抢购时间多少秒时开始加速
             speedinessTime: Number(bodyDataset.speedinessTime),
         }
         // 限制 options
-        if (options.addTime === NaN) {
-            options.addTime = 100
+        if (options.frequency === NaN) {
+            options.frequency = 100
         }
-        if (options.addTime > 200) {
-            options.addTime = 200
+        if (options.frequency > 200) {
+            options.frequency = 200
         }
         if (options.speedinessTime === NaN) {
             options.speedinessTime = 3
@@ -138,18 +131,19 @@ let bindClickStart = () => {
         if (options.speedinessTime > 5) {
             options.speedinessTime = 5
         }
-        // 计算 options
-        options.addTime = parseInt(1000 / options.addTime)
+        // 循环请求加够的间隔 addCartLoopTimeMs
+        options.addCartLoopTimeMs = parseInt(1000 / options.frequency)
+        delete options.frequency
         options.speedinessTime = parseInt(options.speedinessTime)
         monitor(goodsInfo, options)
     })
 }
 
-let bindEvents = () => {
+const bindEvents = () => {
     bindClickStart()
 }
 
-let __main = () => {
+const __main = () => {
     appendElenemtToBody()
     bindEvents()
 }

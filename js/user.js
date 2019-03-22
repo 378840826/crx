@@ -1,5 +1,5 @@
 // 向页面注入抢购代码
-let addInjectScript = () => {
+const addInjectScript = () => {
     let scriptStart = document.createElement('script')
     scriptStart.src = chrome.extension.getURL('js/inject.js')
     scriptStart.id = 'id-inject'
@@ -10,7 +10,7 @@ let addInjectScript = () => {
 }
 
 // 添加监听器监听 popup 发来的消息
-let addListener = () => {
+const addListener = () => {
     chrome.extension.onMessage.addListener(
         function(request, sender, sendResponse) {
             if (request.state === 'start') {
@@ -21,7 +21,7 @@ let addListener = () => {
                 bodyDataset.atid = request.atid
                 bodyDataset.deadline = request.deadline
                 bodyDataset.title = request.title
-                bodyDataset.addTime = request.addTime
+                bodyDataset.frequency = request.frequency
                 bodyDataset.speedinessTime = request.speedinessTime
                 // 触发 inject 中的开启事件
                 let crxDiv = document.querySelector('#id-crx-div')
@@ -41,7 +41,7 @@ let addListener = () => {
 }
 
 // 获取 1 折的商品信息
-let getGoodsIfon = () => {
+const getGoodsIfon = () => {
     console.log('向 e 宠发请求获取商品信息');
     let promise = new Promise(function(resolve, reject) {
         // 判断抢购的时间批次
@@ -103,7 +103,7 @@ let getGoodsIfon = () => {
     return promise
 }
 
-let __main = () => {
+const __main = () => {
     // 注入抢购代码
     addInjectScript()
     // 监听 popup 发来的消息
