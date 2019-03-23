@@ -5,6 +5,38 @@ const appendElenemtToBody = () => {
     document.body.appendChild(crxDiv)
 }
 
+// 格式化时间为 年月日 字符串
+const timeFormat = (date, type) => {
+    let y = date.getFullYear()
+    let m = date.getMonth() + 1
+    let d = date.getDate()
+    let h = date.getHours()
+    let mi = date.getMinutes()
+    let s = date.getSeconds()
+    if (String(m).length === 1) {
+        m = '0' + m
+    }
+    if (String(d).length === 1) {
+        d = '0' + d
+    }
+    if (String(h).length === 1) {
+        h = '0' + h
+    }
+    if (String(mi).length === 1) {
+        mi = '0' + mi
+    }
+    if (String(s).length === 1) {
+        s = '0' + s
+    }
+    var result = `${y}.${m}.${d} ${h}:${mi}:${s}`
+    if (type === 'YMD') {
+        result = `${y}.${m}.${d}`
+    } else if (type === 'HMS') {
+        result = `${h}:${mi}:${s}`
+    }
+    return result
+}
+
 // 获取服务器时间
 const getServiceTime = function () {
     // 避免缓存在 url 后面添加一个随机字符串
@@ -36,27 +68,28 @@ const addGoodsTocart = function (goodsInfo, url) {
         hash: Math.random()
     }
     $.get(url, opts, function (res) {
-        console.log(res);
         if (res.includes('已抢完')) {
-            let nowServiceTime = getServiceTime()
-            console.log('%c 商品已抢完，停止抢购~','color:#666', '当前服务器时间为：', nowServiceTime);
-            // 延迟关闭请求
-            setTimeout(function() {
-                window.clearInterval(berserkTimer)
-            }, 500)
-        } else if (res.includes('抢购上限')) {
-            console.log('%c 抢到了，15分钟内去付款！','background:#ccc;color:#f00;font-size:20px;', '当前服务器时间为：', nowServiceTime);
+            console.log('%c 商品已抢完，停止抢购~~~~~~~~~~','color:#666');
             // 延迟关闭请求
             setTimeout(function() {
                 window.clearInterval(berserkTimer)
             }, 100)
+        } else if (res.includes('抢购上限')) {
+            console.log('%c 抢到了，15分钟内去付款！','background:#ccc;color:#f00;font-size:20px;');
+            // 延迟关闭请求, 并跳转至购物车
+            setTimeout(function() {
+                window.clearInterval(berserkTimer)
+                window.open('//www.epet.com/cart/')
+            }, 100)
+        } else {
+            console.log(res);
         }
     })
 }
 
 // 循环加入购物车
 const addToCart = function (goodsInfo, options) {
-    console.log('开始加速，循环抢购')
+    console.log('开始抢购')
     // url 放这里是避免在循环执行的 addGoodsTocart 函数中做不必要的重复执行 reurl
     var url = reurl("share/ajax.html")
     berserkTimer =  setInterval(function () {
@@ -65,15 +98,17 @@ const addToCart = function (goodsInfo, options) {
 }
 
 const monitor = (goodsInfo, options) => {
-    console.log('options', options);
-    console.log(`%c准备抢购：${goodsInfo.title}`, 'color:#f00;font-size:20px;', `\n抢购开始时间为${goodsInfo.deadline}`);
+    console.log(`%c准备抢购：${goodsInfo.title}`, 'color:#f00;font-size:20px;');
+    console.log(`%c抢购时间为：${timeFormat(goodsInfo.deadline)}`, 'color:#0976cd;');
+    console.log(`%c提前 ${options.speedinessTime} 秒开始抢购`, 'color:#0976cd;');
+    console.log(`%c每秒抢购 ${options.frequency} 次`, 'color:#0976cd;');
     // 获取点击开启时的服务器时间和抢购时间
     let nowServiceTime = getServiceTime()
     let deadline = goodsInfo.deadline
     // 离抢购还剩下多少秒
     let time_s = (deadline - nowServiceTime) / 1000
     if (time_s < 0) {
-        console.error('已经过了抢购时间')
+        console.error('已经过了抢购时间~')
         return false
     }
     // 因为下面的计时是 1 秒后才打印，所以 i 的初始值设为 1000 ms，time_s 也要先 -1
@@ -91,7 +126,7 @@ const monitor = (goodsInfo, options) => {
             let nowTimestamp = new Date(nowServiceTime).getTime() + i
             i = i + 1000
             let nowTime = new Date(nowTimestamp)
-            let text = `剩余${parseInt(time_s / 60)}分${parseInt(time_s % 60)}秒   &&  当前服务器时间为 ${nowTime.getHours()}时${nowTime.getMinutes()}分${nowTime.getSeconds()}秒`
+            let text = `剩余${parseInt(time_s / 60)}分${parseInt(time_s % 60)}秒   &&  服务器时间为${timeFormat(nowTime, 'HMS')}`
             console.log(text)
         }
     }, 1000)
@@ -133,7 +168,7 @@ const bindClickStart = () => {
         }
         // 循环请求加够的间隔 addCartLoopTimeMs
         options.addCartLoopTimeMs = parseInt(1000 / options.frequency)
-        delete options.frequency
+        // delete options.frequency
         options.speedinessTime = parseInt(options.speedinessTime)
         monitor(goodsInfo, options)
     })

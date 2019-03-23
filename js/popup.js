@@ -35,11 +35,14 @@ const createGoods = function(goodsInfoArr) {
         let goodsInfo = goodsInfoArr[i]
         html += `
             <span class="span-goods">
-                <div class="goods-title">${goodsInfo.title}</div>
                 <div class="goods-img">
                     <img src="${goodsInfo.imgSrc}">
                 </div>
+                <div class="goods-title">${goodsInfo.title}</div>
                 <div class="goods-number">
+                    <span class="span-goods-price">
+                        价格: <span class="goods-price">${goodsInfo.price}</span>
+                    </span>
                     <span class="span-goods-gid">
                         gid: <span class="goods-gid">${goodsInfo.gid}</span>
                     </span>
@@ -96,6 +99,7 @@ const bindClickStart = () => {
             console.log("来自 content user 的回复：" + response)
             window.close()
         })
+        popupBtn.classList.add('disabled')
     })
 }
 

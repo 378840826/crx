@@ -85,6 +85,7 @@ const getGoodsIfon = () => {
                         let goods = {
                             title: li.querySelector('.goodsDes').innerText,
                             imgSrc: li.querySelector('img').src,
+                            price: li.querySelector('.ft20').innerText,
                             gid: Number(li.querySelector('.gid').value),
                             atid: Number(li.querySelector('.atid').value),
                             deadline,

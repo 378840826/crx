@@ -5,6 +5,11 @@
     border: 1px solid #000;
 }
 
+.popup-btn.disabled {
+    pointer-events: none;
+    color: #ccc;
+}
+
 .div-goods-container {
     display: flex;
 }
@@ -50,5 +55,9 @@ label {
 
 .p-error {
     display: inline-block;
+    color: #f00;
+}
+
+.tips {
     color: #f00;
 }
