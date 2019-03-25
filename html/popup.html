@@ -9,17 +9,15 @@
     <body>
         <div class="div-goods-container"></div>
         <span class="tips">点击图片自动填充</span>
-        <label>gid:
-            <input id="id-gid" type="text" value="" placeholder="gid (商品编号)">
+        <label>
+            gid：<input id="id-gid" type="text" value="" placeholder="gid (商品编号)">
+            atid：<input id="id-atid" type="text" value="" placeholder="atid (活动编号)">
         </label>
-        <label>atid:
-            <input id="id-atid" type="text" value="" placeholder="atid (活动编号)">
-        </label>
-        <label>整点抢购时间：
+        <label>整点抢购的时间：
             <input id="id-deadline" type="text" value="" placeholder="格式: 2019-02-15 18:00:00">
         </label>
-        <label>每秒抢购次数：
-            <input id="id-frequency" type="number" value="100" placeholder="最多200,默认100" min="10" max="200" step="10">（每秒最多200次，最少10次）
+        <label>每秒抢购的次数：
+            <input id="id-frequency" type="number" value="120" placeholder="最多200,默认100" min="10" max="1000" step="10">（每秒最多1000次，最少10次）
         </label>
         <label>提前几秒开始抢：
             <input id="id-speedinessTime" type="number" value="4" placeholder="最多6秒，默认4秒" min="2" max="6" step="1">（提前最多6秒，最少2秒）
@@ -27,7 +25,7 @@
         <label>商品名称：
             <span id="id-title"></span>
         </label>
-        <span class="popup-btn" data-value="start">开启</span>
+        <span class="popup-btn" data-value="start">开始</span>
         <p class="p-error"></p>
     </body>
     <script src="../js/popup.js"></script>

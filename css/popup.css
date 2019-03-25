@@ -1,8 +1,10 @@
 .popup-btn {
     display: inline-block;
-    padding: 5px 10px;
+    padding: 6px 12px;
     cursor: pointer;
-    border: 1px solid #000;
+    color: #fff;
+    background: #0976cd;
+    border-radius: 5px;
 }
 
 .popup-btn.disabled {
@@ -26,7 +28,7 @@
 }
 
 .span-goods.active {
-    box-shadow: 0 0 5px 3px rgba(255, 0, 0, 0.2);
+    box-shadow: 0 0 5px 3px rgba(9, 118, 205, 0.2);
 }
 
 .goods-img {
@@ -45,12 +47,21 @@
 
 label {
     display: block;
-    margin: 10px 0;
+    margin: 8px 0;
 }
 
 #id-title {
     color: #f00;
-    font-size: 14px;
+    display: inline-block;
+    width: 400px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: bottom;
+}
+
+#id-frequency, #id-speedinessTime {
+    width: 80px;
 }
 
 .p-error {
@@ -59,5 +70,14 @@ label {
 }
 
 .tips {
-    color: #f00;
+    color: #0976cd;
+}
+
+input {
+    height: 26px;
+    width: 166px;
+    border: 1px solid #e6e6e6;
+    border-radius: 5px 0 0 5px;
+    font-size: 14px;
+    padding: 0 10px;
 }

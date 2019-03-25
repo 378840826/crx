@@ -79,7 +79,6 @@ const addGoodsTocart = function (goodsInfo, url) {
             // 延迟关闭请求, 并跳转至购物车
             setTimeout(function() {
                 window.clearInterval(berserkTimer)
-                window.open('//www.epet.com/cart/')
             }, 100)
         } else {
             console.log(res);
@@ -157,14 +156,14 @@ const bindClickStart = () => {
         if (options.frequency === NaN) {
             options.frequency = 100
         }
-        if (options.frequency > 200) {
-            options.frequency = 200
+        if (options.frequency > 1000) {
+            options.frequency = 1000
         }
         if (options.speedinessTime === NaN) {
             options.speedinessTime = 3
         }
-        if (options.speedinessTime > 5) {
-            options.speedinessTime = 5
+        if (options.speedinessTime > 6) {
+            options.speedinessTime = 6
         }
         // 循环请求加够的间隔 addCartLoopTimeMs
         options.addCartLoopTimeMs = parseInt(1000 / options.frequency)
