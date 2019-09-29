@@ -126,60 +126,37 @@ const monitor = (goodsInfo, options) => {
             // 获取 atid（改版后之前获取的 atid 是错误的）
             // atid 有规律时，可以手动在页面填，如果没填才请求
             if (goodsInfo.atid == '0') {
+                let timestamp = new Date(deadline).getTime()
+                let data = {
+                    app: "main",
+                    callback: `jQuery17107026780096430285_${timestamp}`,
+                    inajax: "1",
+                    t: timestamp,
+                    _: timestamp,
+                }
+                let goodsUrl = `://item.epet.com/${goodsInfo.gid}.html`
                 getAtidTime = setInterval(function() {
                     $.ajax({
                         type : 'post',
-                        url: '/share/activitys/suprise.html?do=getNewSurprise',
-                        data: {time},
+                        url: '/json/data.html',
+                        data: data,
+                        async: false,
                         success: function(res) {
-                            // 判断是否获取到 atid （时间到了才能获取）
-                            if (res.slice(0, 2000).includes(`class="atid" value="0"`)) {
-                                console.log('atid 为 0， 获取失败');
+                            let html = JSON.parse(Object(res)).html.daySurprise
+                            let domContainer = document.createElement('div')
+                            domContainer.innerHTML = html
+                            let aTag = domContainer.querySelector(`a[href="http://item.epet.com/${goodsInfo.gid}.html"]`)
+                            if (!aTag) {
+                                console.log('未获取到atid，可能是时间未到');
                                 return
                             } else {
-                                let gidIndex_1 = res.indexOf(`class="gid" value="`)
-                                let gid_1 = res.slice(gidIndex_1 + 19, gidIndex_1 + 19 + 6)
-                                let atidIndex_1 = res.indexOf(`class="atid" value="`)
-                                let atid_1 = res.slice(atidIndex_1 + 20, atidIndex_1 + 20 + 6)
-                                if (gid_1 == goodsInfo.gid) {
-                                    goodsInfo.atid = atid_1
-                                    // 加购物车
-                                    addToCart(goodsInfo, options)
-                                } else {
-                                    res = res.slice(atidIndex_1 + 20 + 6)
-                                    let atidIndex_2 = res.indexOf(`class="atid" value="`)
-                                    let atid_2 = res.slice(atidIndex_2 + 20, atidIndex_2 + 20 + 6)
-                                    goodsInfo.atid = atid_1
-                                    // 加购物车
-                                    addToCart(goodsInfo, options)
-                                }
+                                let atid = aTag.parentElement.getElementsByClassName('atid')[0].value
+                                goodsInfo.atid = atid
+                                // 加购物车
+                                addToCart(goodsInfo, options)
                                 // 停止获取 atid
                                 window.clearInterval(getAtidTime)
                             }
-
-                            // let div = document.createElement('ul')
-                            // div.innerHTML = res
-                            // // 判断是否获取到了 atid
-                            // if (div.getElementsByClassName('atid')[0].value === '0') {
-                            //     console.log('atid 为 0， 获取失败');
-                            //     return
-                            // }
-                            // let liAll = div.querySelectorAll('li')
-                            // let goodsArr = []
-                            // // 找出商品的关键信息(前 2 个为 1折商品)
-                            // for (let i = 0; i < 2; i++) {
-                            //     let li = liAll[i]
-                            //     var gid = li.getElementsByClassName('gid')[0].value
-                            //     if (gid == goodsInfo.gid) {
-                            //         goodsInfo.atid = li.getElementsByClassName('atid')[0].value
-                            //         // 加购物车
-                            //         addToCart(goodsInfo, options)
-                            //         break
-                            //     }
-                            // }
-                            // console.log('如果未开始抢购 则程序判断错误');
-                            // // 停止获取 atid
-                            // window.clearInterval(getAtidTime)
                         },
                         error: function(err) {
                             console.log('请求折扣商品数据失败', err);
